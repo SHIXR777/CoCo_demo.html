@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FBI | COCO Forensic Pipeline</title>
+    <style>
+        :root {
+            --neon-green: #00ff41;
+            --bg-dark: #050505;
+            --panel-bg: #0d1117;
+            --border-color: #30363d;
+        }
+        body {
+            background-color: var(--bg-dark);
+            color: var(--neon-green);
+            font-family: 'Courier New', Courier, monospace;
+            margin: 0;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+        #sidebar {
+            width: 300px;
+            background: var(--panel-bg);
+            border-right: 1px solid var(--border-color);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+        #main-display {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+        }
+        .terminal-output {
+            flex: 1;
+            background: black;
+            border: 1px solid var(--border-color);
+            padding: 15px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+            box-shadow: inset 0 0 10px #000;
+        }
+        .controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        button {
+            background: transparent;
+            color: var(--neon-green);
+            border: 1px solid var(--neon-green);
+            padding: 12px;
+            font-family: inherit;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        button:hover:not(:disabled) {
+            background: var(--neon-green);
+            color: black;
+            box-shadow: 0 0 15px var(--neon-green);
+        }
+        button:disabled {
+            border-color: #333;
+            color: #333;
+        }
+        .evidence-tag {
+            background: #161b22;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 4px;
+            opacity: 0.3;
+        }
+        .evidence-tag.active {
+            opacity: 1;
+            border-left: 4px solid var(--neon-green);
+        }
+        .progress-bar {
+            width: 100%;
+            height: 5px;
+            background: #222;
+            margin-top: 10px;
+            display: none;
+        }
+        .progress-fill {
+            height: 100%;
+            background: var(--neon-green);
+            width: 0%;
+        }
+    </style>
+</head>
+<body>
+
+<div id="sidebar">
+    <h3>EVIDENCE LOCKER</h3>
+    <div id="ev1" class="evidence-tag">[ ] Evidence 1: Network Map</div>
+    <div id="ev2" class="evidence-tag">[ ] Evidence 2: Recipient Provenance</div>
+    <div id="ev3" class="evidence-tag">[ ] Evidence 3: Capability Attribution</div>
+    <div style="margin-top: auto;">
+        <p>STATUS: INVESTIGATION IN PROGRESS</p>
+        <p id="profit-counter">ILLICIT PROFIT: $0</p>
+    </div>
+</div>
+
+<div id="main-display">
+    <div class="terminal-output" id="term">
+        <p>[SYSTEM] Initializing COCO Pipeline v2.4...</p>
+        <p>[SYSTEM] Target Loaded: Fraud Contract C-98f804</p>
+    </div>
+    
+    <div class="progress-bar" id="pb"><div class="progress-fill" id="pf"></div></div>
+
+    <div class="controls">
+        <button id="btn1" onclick="runTask(1)">Recover Associated Contracts</button>
+        <button id="btn2" onclick="runTask(2)" disabled>Analyze Recipient Origin</button>
+        <button id="btn3" onclick="runTask(3)" disabled>Attribute Capabilities</button>
+        <button id="btn4" onclick="runTask(4)" disabled>Submit Case to FBI</button>
+    </div>
+</div>
+
+<script>
+    const term = document.getElementById('term');
+    const pf = document.getElementById('pf');
+    const pb = document.getElementById('pb');
+
+    function log(msg, color = 'var(--neon-green)') {
+        const p = document.createElement('p');
+        p.style.color = color;
+        p.innerHTML = `> ${new Date().toLocaleTimeString()} | ${msg}`;
+        term.appendChild(p);
+        term.scrollTop = term.scrollHeight;
+    }
+
+    async function runTask(step) {
+        pb.style.display = 'block';
+        document.getElementById(`btn${step}`).disabled = true;
+        
+        for(let i = 0; i <= 100; i+=5) {
+            pf.style.width = i + '%';
+            await new Promise(r => setTimeout(r, 50));
+        }
+        pb.style.display = 'none';
+
+        if(step === 1) {
+            log("Tracing Creation Tx: T-8bbae5...");
+            log("DCW Wallet Identified: W-521058 [Georgia Tech Data Source]");
+            log("Mapping Associated Contracts... Found 1,283,198 nodes.");
+            document.getElementById('ev1').classList.add('active');
+            document.getElementById('btn2').disabled = false;
+        } else if(step === 2) {
+            log("Executing Symbolic Execution on Bytecode...");
+            log("Backward Slicing recipient stack... Resolved to Storage S[0]");
+            log("Parent Contract C-48d304 identified as 'Originator'.");
+            document.getElementById('ev2').classList.add('active');
+            document.getElementById('btn3').disabled = false;
+        } else if(step === 3) {
+            log("Matching semantic models...");
+            log("Matched: Forced Transfer (CALL opcode detected)");
+            log("Matched: Self-Replication (CREATE2 detected)");
+            document.getElementById('ev3').classList.add('active');
+            document.getElementById('btn4').disabled = false;
+        } else if(step === 4) {
+            log("GENERATING LEGAL AFFIDAVIT...", "yellow");
+            log("CASE FILE SENT TO ATLANTA FBI FIELD OFFICE.", "white");
+            document.getElementById('profit-counter').innerHTML = "ILLICIT PROFIT: $2.08 Billion";
+            alert("Investigation Complete. Scammers Unmasked.");
+        }
+    }
+</script>
+
+</body>
+</html>
